@@ -74,7 +74,7 @@ ChatServer::ChatServer(quint16 port, QObject* parent) : QObject(parent),
 		connect(m_pWebSocketServer, &QWebSocketServer::newConnection,this, &ChatServer::onNewConnection);
 	}
 	QTimer* timer = new QTimer();
-	timer->setInterval(50);
+	timer->setInterval(75);
 	timer->start();
 	connect(timer,&QTimer::timeout,this, &ChatServer::broadCast1);
 	elapsedTimer.start();
@@ -103,10 +103,16 @@ void ChatServer::onNewConnection() {
 
 //! [processMessage]
 void ChatServer::processMessage(const QString& message) {
+	static const QString skel = R"EOD(
+{
+"action": "message",
+"payload" : "%1"
+}
+)EOD";
 	QWebSocket* pSender = qobject_cast<QWebSocket*>(sender());
 	for (QWebSocket* pClient : qAsConst(m_clients)) {
 		if (pClient != pSender) //don't echo message back to sender
-			pClient->sendTextMessage(message);
+			pClient->sendTextMessage(skel.arg(message));
 	}
 }
 //! [processMessage]

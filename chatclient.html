@@ -1,3 +1,5 @@
+
+
  <html>
       <head>
           <title>WebSocket Chat Client</title>
@@ -93,9 +95,9 @@
 					console.log("hurra!");
 					var obj = document.getElementById("button");
 					obj.innerText = myObj.payload;
+				}else if (myObj.action == "message"){
+					debug ( myObj.payload );
 				}
-                          }else{
-				debug( evt.data );
                           }
 
                           
